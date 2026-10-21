@@ -1,0 +1,10 @@
+version: '1.0'
+
+metadata:
+  title: 'Signal at Dawn'
+  artist: 'Example Artist'
+
+lines:
+  - text: 'Wait'
+    start_ms: -1
+    end_ms: 2000

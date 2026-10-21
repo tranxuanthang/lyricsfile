@@ -49,6 +49,7 @@ plain: |
 - [Draft specification](SPECIFICATION.md)
 - [Open design questions](OPEN_QUESTIONS.md)
 - [Examples](examples/)
+- [Invalid examples and the rules they violate](examples/invalid/README.md)
 - [Contributing](CONTRIBUTING.md)
 
 The original [`LYRICSFILE_CONCEPT.md`](LYRICSFILE_CONCEPT.md) is kept for

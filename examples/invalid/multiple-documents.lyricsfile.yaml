@@ -1,0 +1,17 @@
+version: '1.0'
+
+metadata:
+  title: 'Signal at Dawn'
+  artist: 'Example Artist'
+
+plain: |
+  A small signal crosses the room
+---
+version: '1.0'
+
+metadata:
+  title: 'Signal at Dusk'
+  artist: 'Example Artist'
+
+plain: |
+  A quiet answer reaches the door
