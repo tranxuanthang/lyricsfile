@@ -41,30 +41,6 @@ These questions matter most for a stable 1.0 release.
 - Can an instrumental track contain descriptive or structural text?
 - Should empty strings and whitespace-only lyric lines be treated differently?
 
-## Reading Annotation Proposal
-
-Section 5.1 proposes optional line/word `readings` spans. Before submitting an
-upstream specification change, open a dedicated Discussion or issue, as required
-by `CONTRIBUTING.md`. This branch is a reviewable proposal, not an accepted format
-release. Questions for that discussion:
-
-- Can this remain an additive part of draft 1.0, or must an extension/version
-  mechanism be agreed first? Existing readers' unknown-field behavior is not
-  guaranteed, so deployed compatibility must be verified.
-- Are line/word scalar-value spans the preferred model, or should there be an
-  independent annotation track? The proposal chooses one annotation level per
-  line to avoid precedence conflicts.
-- Should grapheme-boundary alignment become mandatory rather than recommended?
-  That would require a specified Unicode segmentation version.
-- Should reading languages use BCP 47 even though the current primary lyric
-  language field is ISO 639-1?
-- Are alternative readings in one revision needed? The current proposal allows
-  one nonoverlapping reading per base span, and uses separate lyric versions for
-  alternatives.
-- How should converters advertise annotation loss, and should a future correction
-  interchange format standardize revision hashes? This proposal does not define
-  a global dictionary or an LRCLIB database/API schema.
-
 ## Serialization And Distribution
 
 - Should Lyricsfile define a media type?
