@@ -1,0 +1,27 @@
+version: '1.0'
+metadata:
+  title: 'Timed Reading Example'
+  artist: 'Example Singer'
+  language: 'ja'
+lines:
+  - text: '明日へ 食べる'
+    start_ms: 12000
+    end_ms: 16000
+    words:
+      - text: '明日へ '
+        start_ms: 12000
+        end_ms: 14000
+        readings:
+          - start: 0
+            end: 2
+            text: 'あした'
+            language: 'ja'
+      - text: '食べる'
+        start_ms: 14000
+        end_ms: 16000
+        readings:
+          - start: 0
+            end: 1
+            text: 'た'
+            language: 'ja'
+plain: '明日へ 食べる'

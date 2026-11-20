@@ -60,6 +60,7 @@ Each item in `lines` must be a mapping with these fields:
 | `start_ms` | integer | Yes | Start time in milliseconds. |
 | `end_ms` | integer | No | End time in milliseconds. |
 | `words` | sequence | No | Word- or segment-level synchronization. |
+| `readings` | sequence | No | Optional pronunciation spans relative to this line’s `text`; see section 5.1. |
 
 `start_ms` must not be negative. When present, `end_ms` must be greater than or
 equal to `start_ms`.
@@ -79,6 +80,7 @@ Each item in `words` must be a mapping with these fields:
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
 | `text` | string | Yes | Text of the word or segment, including relevant whitespace. |
+| `readings` | sequence | No | Optional pronunciation spans relative to this word’s `text`; see section 5.1. |
 | `start_ms` | integer | Yes | Start time in milliseconds. |
 | `end_ms` | integer | No | End time in milliseconds. |
 
@@ -94,6 +96,98 @@ spaces do not need to add them.
 
 When `words` is not empty, readers should use it for timed highlighting.
 `line.text` remains the fallback for readers without word-sync support.
+
+## 5.1. Optional Reading Annotations
+
+This addition is proposed as part of the draft. It is not a statement that
+existing Lyricsfile applications already support it. See the compatibility
+and version questions in [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md).
+
+A line or word may include a `readings` sequence. An omitted or empty sequence
+means no supplied reading annotations. A reader may generate its own readings
+when none are supplied, but generated readings must not silently overwrite
+supplied annotations when saving.
+
+Each reading must be a mapping with these fields:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `start` | integer | Yes | Zero-based start offset in the containing `text`. |
+| `end` | integer | Yes | End-exclusive offset in that same `text`. |
+| `text` | string | Yes | Nonblank, contributor-supplied pronunciation. |
+| `language` | string | No | BCP 47 language tag for the reading, such as `ja` or `ja-Latn`. |
+
+Offsets count Unicode scalar values (code points excluding surrogates), not
+UTF-8 bytes, UTF-16 code units, or grapheme clusters. Count the exact decoded
+YAML `text` value, including whitespace and line breaks. Do not trim, case-fold,
+or normalize Unicode before counting. Writers should place span boundaries at
+grapheme-cluster boundaries, so combining marks are not separated from their
+base characters.
+
+For example, `🍀食べる` has four scalar values. The span `[1, 2)` selects `食`,
+even though its UTF-8 byte offset and JavaScript string index differ. In Rust,
+count `.chars()`; in JavaScript, use `Array.from(text)` rather than indexing UTF-16
+code units. A decomposed accent counts separately from its base character.
+
+For each annotation:
+
+- `0 <= start < end <=` the scalar-value count of the containing `text`.
+- The base substring is the containing `text[start:end]`; it must not be
+  duplicated into the annotation or replaced with the reading.
+- The reading's `text` must contain at least one non-whitespace character.
+- The reading is authoritative for this lyric version. It may differ from a
+  dictionary reading, and is not restricted to Japanese, kana, or one script.
+- `language`, when supplied, must be a nonblank BCP 47 tag. Omission makes no
+  assertion about the reading's language; do not infer it from the base text.
+
+Annotations in a sequence must be ordered by `start` and must not overlap.
+Adjacent spans are allowed. At most one reading may annotate a given base
+character; alternate pronunciations need a separate lyric version.
+
+A word's offsets are local to that word, not the complete line. A line may
+instead supply line-relative readings, even when it has timed words. A line
+must not have nonempty `readings` if any of its words also has nonempty
+`readings`; this avoids conflicting or duplicate annotations. A reader maps
+line-relative readings across word boundaries using the concatenated word
+text. Annotated lines with words must satisfy the exact text-concatenation
+rule in section 5; otherwise the document is invalid for this extension.
+
+```yaml
+# Only 食 receives a reading. べる remains ordinary text (okurigana).
+text: '食べる'
+start_ms: 12000
+end_ms: 14000
+readings:
+  - start: 0
+    end: 1
+    text: 'た'
+    language: 'ja'
+```
+
+Readings have no timestamps and do not change line or word timing. They are
+annotations over a timed unit, not independently sung units. A player may
+render them as ruby, a pronunciation aid, or hide them. Styling and animation
+remain application decisions.
+
+Inline editing notation such as `{食|た}べる` is an editor convention, not part
+of this format: store `食べる` as `text` and its reading as structured data.
+Unannotated text is not a request to delete or translate the original lyrics.
+
+When exporting plain text or LRC, emit only the base lyric text. Do not insert
+furigana, braces, HTML, or pronunciation into `plain`, `line.text`, or
+`word.text`. A lossy exporter should warn that reading annotations will be
+lost, and retain the source Lyricsfile when possible. Reading-aware editors
+must preserve untouched annotations; if base text changes, validate or update
+the offsets instead of carrying them over unchanged. Invalid annotations
+should produce an actionable error; a viewer may still show the base lyrics.
+
+Annotations belong to the exact text in a particular Lyricsfile revision, not
+to a track title or a global dictionary. External correction overlays should
+identify both the lyric version and its content (for example, an immutable
+revision ID and SHA-256 of the original file bytes), and reject a changed base
+revision. This does not introduce an LRCLIB-specific ID or canonical hashing
+scheme into the file format. Changes to an audio/video offset do not change
+these text-relative positions.
 
 ## 6. Plain Lyrics
 

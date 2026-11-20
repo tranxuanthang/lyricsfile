@@ -1,0 +1,19 @@
+version: '1.0'
+metadata:
+  title: 'A Small Example'
+  artist: 'Example Singer'
+  language: 'ja'
+lines:
+  - text: '明日へ 食べる'
+    start_ms: 12000
+    end_ms: 14000
+    readings:
+      - start: 0
+        end: 2
+        text: 'あした'
+        language: 'ja'
+      - start: 4
+        end: 5
+        text: 'た'
+        language: 'ja'
+plain: '明日へ 食べる'
