@@ -62,6 +62,26 @@ reference. The draft specification is the current source of truth.
 - Make it practical for different apps and libraries to use the same files.
 - Develop the format through open discussion and contributions.
 
+## Proposed Reading Annotations
+
+The draft now describes optional `readings` spans on lines or words: for example,
+annotating only `食` in `食べる` with `た`. Base text and timing are unchanged.
+This is a proposal for review, not a claim of deployed reader support.
+
+- [Reading rules and Unicode offsets](SPECIFICATION.md#51-optional-reading-annotations)
+- [Line-level example](examples/readings-line.lyricsfile.yaml)
+- [Word-level example](examples/readings-words.lyricsfile.yaml)
+- [Unicode example](examples/readings-unicode.lyricsfile.yaml)
+- [Invalid examples](examples/invalid/README.md)
+
+A small development checker covers annotation semantics (not the entire draft):
+
+```sh
+python -m pip install -r tools/requirements.txt
+python tools/check_readings.py
+python -m unittest discover -s tests -v
+```
+
 ## Current Priorities
 
 1. Review and stabilize the version 1.0 format.

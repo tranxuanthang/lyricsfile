@@ -1,0 +1,29 @@
+version: '1.0'
+metadata:
+  title: 'Unicode Reading Example'
+  artist: 'Example Singer'
+lines:
+  - text: '🍀食べる'
+    start_ms: 0
+    end_ms: 2000
+    readings:
+      - start: 1
+        end: 2
+        text: 'た'
+        language: 'ja'
+  - text: "e\u0301風"
+    start_ms: 2000
+    end_ms: 4000
+    readings:
+      - start: 2
+        end: 3
+        text: 'かぜ'
+        language: 'ja'
+  - text: '𠮷へ'
+    start_ms: 4000
+    end_ms: 6000
+    readings:
+      - start: 0
+        end: 1
+        text: 'よし'
+        language: 'ja'

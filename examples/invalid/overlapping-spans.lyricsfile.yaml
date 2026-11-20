@@ -1,0 +1,14 @@
+version: '1.0'
+metadata:
+  title: Invalid Reading Example
+  artist: Example Singer
+lines:
+- text: 食べる
+  start_ms: 0
+  readings:
+  - start: 0
+    end: 1
+    text: た
+  - start: 0
+    end: 2
+    text: other
